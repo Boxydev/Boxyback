@@ -6,6 +6,6 @@ require __DIR__.'/../vendor/autoload.php';
 use Boxyback\Command;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Boxyback', '0.1-dev');
+$application = new Application('Boxyback', '@package_version@');
 $application->add(new Command\BackupCommand());
 $application->run();

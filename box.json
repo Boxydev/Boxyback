@@ -10,6 +10,7 @@
             "in": "vendor"
         }
     ],
+    "git-version": "package_version",
     "main": "bin/boxyback",
     "output": "boxyback.phar",
     "stub": true
