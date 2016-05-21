@@ -8,6 +8,5 @@ use Symfony\Component\Console\Application;
 
 $application = new Application('Boxyback', '@package_version@');
 $application->add(new Command\BackupCommand());
-$application->add(new Command\RestoreCommand());
-$application->add(new Command\InitCommand());
+$application->add(new Command\FtpCommand());
 $application->run();
