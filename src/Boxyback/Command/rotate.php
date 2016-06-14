@@ -37,5 +37,4 @@ done
 
 #echo ${keep[@]}
 
-ls $1 | grep -vE "$(IFS=\| && echo "${keep[*]}")"
-#| xargs -r rm
+find $1 -maxdepth 1 -type f | grep -vE "$(IFS=\| && echo "${keep[*]}")" | xargs -r rm
