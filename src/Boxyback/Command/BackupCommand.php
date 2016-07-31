@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
+use Boxyback\Rotate;
 
 class BackupCommand extends Command
 {
@@ -32,10 +33,6 @@ class BackupCommand extends Command
             $apps = $yaml->parse(file_get_contents($yamlArgument))['apps'];
         }
 
-        $script = file_get_contents(__DIR__."/rotate.php");
-        file_put_contents('rotate', $script);
-        chmod('rotate', 0755);
-        
         foreach($apps as $app){
         	$app = (object) $app;
 
@@ -47,14 +44,11 @@ class BackupCommand extends Command
 
             if($app->type=="all"){
             	system('tar -zcvf /home/matthieu/backups/'.$app->id.'/archive_'.$date.'.tar.gz -C /home/'.$app->user.'/'.$app->folder.' .');
-			}
+			      }
 
-            //system('find /home/matthieu/backups/'.$app->id.'/ -type f -mtime +'.($app->save-1).' -exec rm -v {} \;');
-
-            system('./rotate /home/matthieu/backups/'.$app->id.'/');
+            $rotate = new Rotate("/home/matthieu/backups/".$app->id."/");
 
         }
 
-        unlink('rotate');
     }
 }
