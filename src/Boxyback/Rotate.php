@@ -7,18 +7,18 @@ class Rotate {
   private $dates = array();
   private $directory;
 
-  public function __construct($directory){
+  public function __construct($directory, $frequency){
     $this->now = new \DateTimeImmutable();
-    $this->setDay(7);
-    $this->setWeek(4);
-    $this->setMonth(11);
-    $this->setYear(5);
+    $this->setDay($frequency['day'] ? $frequency['day'] : 7);
+    $this->setWeek(@$frequency['week']);
+    $this->setMonth(@$frequency['month']);
+    $this->setYear(@$frequency['year']);
     $this->directory = $directory;
     $this->rotate();
   }
 
   public function setDay($nbDay){
-    for($i = 0; $i <= $nbDay; $i++){
+    for($i = 0; $i < $nbDay; $i++){
         $this->dates[] = $this->now->modify('-'.$i.' day')->format("Y-m-d");
     }
   }
@@ -31,7 +31,7 @@ class Rotate {
 
   public function setMonth($nbMonth){
     for($i = 0; $i < $nbMonth; $i++){
-        $month = $this->now->modify('- '.($i+2).' month')->format('M');
+        $month = $this->now->modify('- '.($i+1).' month')->format('M');
         $year = $this->now->modify('- '.($i+2).' month')->format('Y');
         $this->dates[] = $this->now->modify("first Sunday of ".$month." ".$year)->format("Y-m-d");
     }
