@@ -34,7 +34,7 @@ class BackupCommand extends Command
         }
 
         foreach($apps as $app){
-        	$app = (object) $app;
+        	  $app = (object) $app;
 
             system('mkdir -p /home/matthieu/backups/'.$app->id);
 
@@ -46,7 +46,7 @@ class BackupCommand extends Command
             	system('tar -zcvf /home/matthieu/backups/'.$app->id.'/archive_'.$date.'.tar.gz -C /home/'.$app->user.'/'.$app->folder.' .');
 			      }
 
-            $rotate = new Rotate("/home/matthieu/backups/".$app->id."/");
+            $rotate = new Rotate("/home/matthieu/backups/".$app->id."/", @$app->frequency);
 
         }
 
