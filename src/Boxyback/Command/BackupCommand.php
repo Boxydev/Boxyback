@@ -39,7 +39,7 @@ class BackupCommand extends Command
             system('mkdir -p /home/matthieu/backups/'.$app->id);
 
             if(property_exists($app, 'database') && property_exists($app, 'password')){
-                system('mysqldump --protocol=socket -S /run/mysql-default/mysqld.sock --user='.$app->user.' --password='.$app->password.' '.$app->database.' | gzip > /home/matthieu/backups/'.$app->id.'/dump_'.$date.'.sql.gz');
+                system('mysqldump --protocol=socket -S /run/mysql-default/mysqld.sock --user=root --password='.$app->password.' '.$app->database.' | gzip > /home/matthieu/backups/'.$app->id.'/dump_'.$date.'.sql.gz');
             }
 
             if($app->type=="all"){
