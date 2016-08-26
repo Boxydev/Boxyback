@@ -31,9 +31,9 @@ class FtpCommand extends Command
         }
 
         $config = (object) $config;
-        $config->ftp = (object) $config->ftp;     
-           
-        system('lftp ftp://'.$config->ftp->login.':'.$config->ftp->password.'@'.$config->ftp->host.' -e "set ftp:ssl-allow no; mirror -e -R '.$config->dir.' /apps/'.$config->ftp->vm.'; quit"');
+        $config->ftp = (object) $config->ftp;
+
+        system('lftp ftp://'.$config->ftp->login.':'.$config->ftp->password.'@'.$config->ftp->host.' -e "set ftp:ssl-allow no; mirror -e -R '.$config->dir.' /'.$config->ftp->vm.'/apps; quit"');
         system('echo "Le backup FTP de '.$config->ftp->vm.' a bien été synchronisé." | mail -s "Backup FTP '.$config->ftp->vm.'" -aFrom:'.$config->ftp->vm.'\<'.$config->ftp->vm.'@boxydev.com\> '.$config->ftp->email);
     }
 }
