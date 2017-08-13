@@ -1,0 +1,23 @@
+boxyback:
+  apps:
+    "mon_site":
+      folder: "/sites/site1"
+      mysql:
+        database: "site1"
+        user: "root"
+        password: "root"
+    "mon_site2":
+      folder: "/sites/site2"
+      mysql:
+        database: "site2"
+        user: "root"
+        password: "root"
+
+  cloud:
+    local: "/backups"
+    ftp:
+      host:     "host"
+      login:    "login"
+      password: "password"
+      email:    "matthieumota@gmail.com"
+      vm:       "Mon serveur"
