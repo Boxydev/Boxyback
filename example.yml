@@ -9,7 +9,8 @@ boxyback:
     "mon_site2":
       folder: "/sites/site2"
       mysql:
-        database: "site2"
+        host: "mysql"
+        database: "mysql"
         user: "root"
         password: "root"
 

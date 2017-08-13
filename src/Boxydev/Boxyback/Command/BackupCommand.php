@@ -51,8 +51,8 @@ class BackupCommand extends Command
                     }
                 }
 
-                if (isset($app['mysql']) && isset($app['mysql']['database']) && isset($app['mysql']['user']) && isset($app['mysql']['password'])) {
-                    $process = new Process('mysqldump --user='.$app['mysql']['user'].' --password='.$app['mysql']['password'].' '.$app['mysql']['database'].' | gzip > .'.$datas['boxyback']['cloud']['local'].'/'.$id.'/dump_'.$date.'.sql.gz');
+                if (isset($app['mysql']) && isset($app['mysql']['host']) && isset($app['mysql']['database']) && isset($app['mysql']['user']) && isset($app['mysql']['password'])) {
+                    $process = new Process('mysqldump --host='.$app['mysql']['host'].' --user='.$app['mysql']['user'].' --password='.$app['mysql']['password'].' '.$app['mysql']['database'].' | gzip > .'.$datas['boxyback']['cloud']['local'].'/'.$id.'/dump_'.$date.'.sql.gz');
                     $process->run();
 
                     if (!$process->isSuccessful()) {
@@ -63,6 +63,8 @@ class BackupCommand extends Command
                 $rotate = new Rotate('.'.$datas['boxyback']['cloud']['local'].'/'.$id);
                 $rotate->setDay(7);
                 $rotate->run();
+
+                $output->writeln('<info>Backup done !</info>');
             }
         } else {
             $output->writeln('<error>Missing boxyback or apps index in Yaml file</error>');
