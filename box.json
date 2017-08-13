@@ -1,8 +1,5 @@
 {
-    "chmod": "0755",
-    "directories": [
-        "src"
-    ],
+    "directories": ["src"],
     "finder": [
         {
             "name": "*.php",
@@ -13,5 +10,6 @@
     "git-version": "package_version",
     "main": "bin/boxyback",
     "output": "boxyback.phar",
-    "stub": true
+    "stub": true,
+    "chmod": "0755"
 }
