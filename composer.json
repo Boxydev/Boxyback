@@ -13,8 +13,8 @@
         "symfony/yaml": "^3.3"
     },
     "autoload": {
-        "psr-0": {
-            "Boxyback": "src"
+        "psr-4": {
+            "Boxydev\\": "src/Boxydev"
         }
     }
 }

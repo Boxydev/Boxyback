@@ -1,6 +1,6 @@
 <?php
 
-namespace Boxyback;
+namespace Boxydev\Boxyback;
 
 class Rotate {
   private $now;

@@ -8,7 +8,7 @@
         }
     ],
     "git-version": "package_version",
-    "main": "bin/boxyback",
+    "main": "boxyback",
     "output": "boxyback.phar",
     "stub": true,
     "chmod": "0755"

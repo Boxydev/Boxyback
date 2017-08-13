@@ -1,6 +1,6 @@
 <?php
 
-namespace Boxyback\Command;
+namespace Boxydev\Boxyback\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
