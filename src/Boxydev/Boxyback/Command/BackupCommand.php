@@ -2,6 +2,8 @@
 
 namespace Boxydev\Boxyback\Command;
 
+use Boxydev\Boxyback\Configuration\BackupConfiguration;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,21 +31,35 @@ class BackupCommand extends Command
     {
         if ($file = $input->getArgument('file')) {
             $yaml_parser = new Parser();
-            $datas = $yaml_parser->parse(file_get_contents($file));
+
+            $processor = new Processor();
+            $datas = $processor->processConfiguration(
+                new BackupConfiguration(),
+                array($yaml_parser->parse(file_get_contents($file)))
+            );
         }
 
-        if (isset($datas['boxyback']) && isset($datas['boxyback']['apps'])) {
-            $apps = $datas['boxyback']['apps'];
-
+        if ($apps = $datas['boxyback']['apps']) {
             foreach ($apps as $id => $app) {
-                if (!is_dir('.'.$datas['boxyback']['cloud']['local'].'/'.$id)) {
-                    mkdir('.'.$datas['boxyback']['cloud']['local'].'/'.$id, 0755, true);
+                $localFolder = $datas['boxyback']['cloud']['local'];
+                $appFolder = $app['folder'];
+                $database = isset($app['mysql']) ? $app['mysql'] : null;
+
+                if (!is_dir($localFolder.'/'.$id)) {
+                    mkdir($localFolder.'/'.$id, 0755, true);
                 }
 
                 $date = date('Y-m-d-H-i-s');
 
-                if (isset($datas['boxyback']['cloud']) && isset($datas['boxyback']['cloud']['local'])) {
-                    $process = new Process('tar -zcvf .'.$datas['boxyback']['cloud']['local'].'/'.$id.'/archive_'.$date.'.tar.gz -C .'.$app['folder'].' .');
+                $process = new Process('tar -zcvf '.$localFolder.'/'.$id.'/archive_'.$date.'.tar.gz -C .'.$appFolder.' .');
+                $process->run();
+
+                if (!$process->isSuccessful()) {
+                    throw new \RuntimeException($process->getErrorOutput());
+                }
+
+                if ($database) {
+                    $process = new Process('mysqldump --host='.$database['host'].' --user='.$database['user'].' --password='.$database['password'].' '.$app['mysql']['database'].' | gzip > '.$localFolder.'/'.$id.'/dump_'.$date.'.sql.gz');
                     $process->run();
 
                     if (!$process->isSuccessful()) {
@@ -51,16 +67,7 @@ class BackupCommand extends Command
                     }
                 }
 
-                if (isset($app['mysql']) && isset($app['mysql']['host']) && isset($app['mysql']['database']) && isset($app['mysql']['user']) && isset($app['mysql']['password'])) {
-                    $process = new Process('mysqldump --host='.$app['mysql']['host'].' --user='.$app['mysql']['user'].' --password='.$app['mysql']['password'].' '.$app['mysql']['database'].' | gzip > .'.$datas['boxyback']['cloud']['local'].'/'.$id.'/dump_'.$date.'.sql.gz');
-                    $process->run();
-
-                    if (!$process->isSuccessful()) {
-                        throw new \RuntimeException($process->getErrorOutput());
-                    }
-                }
-
-                $rotate = new Rotate('.'.$datas['boxyback']['cloud']['local'].'/'.$id);
+                $rotate = new Rotate($localFolder.'/'.$id);
                 $rotate->setDay(7);
                 $rotate->run();
 
@@ -69,5 +76,6 @@ class BackupCommand extends Command
         } else {
             $output->writeln('<error>Missing boxyback or apps index in Yaml file</error>');
         }
+
     }
 }

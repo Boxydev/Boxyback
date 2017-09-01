@@ -3,19 +3,20 @@ boxyback:
     "mon_site":
       folder: "/sites/site1"
       mysql:
-        database: "site1"
+        host: "db"
+        database: "mysql"
         user: "root"
         password: "root"
     "mon_site2":
       folder: "/sites/site2"
       mysql:
-        host: "mysql"
-        database: "mysql"
+        host: "db"
+        database: "information_schema"
         user: "root"
         password: "root"
 
   cloud:
-    local: "/backups"
+    local: "./backups"
     ftp:
       host:     "host"
       login:    "login"
