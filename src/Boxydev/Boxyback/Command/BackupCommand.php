@@ -53,6 +53,7 @@ class BackupCommand extends Command
 
                 $process = new Process('tar -zcvf '.$localFolder.'/'.$id.'/archive_'.$date.'.tar.gz -C .'.$appFolder.' .');
                 $process->run();
+                $output->writeln('<info>['.$id.'] Compress</info>');
 
                 if (!$process->isSuccessful()) {
                     throw new \RuntimeException($process->getErrorOutput());
@@ -61,6 +62,7 @@ class BackupCommand extends Command
                 if ($database) {
                     $process = new Process('mysqldump --host='.$database['host'].' --user='.$database['user'].' --password='.$database['password'].' '.$app['mysql']['database'].' | gzip > '.$localFolder.'/'.$id.'/dump_'.$date.'.sql.gz');
                     $process->run();
+                    $output->writeln('<info>['.$id.'] Dump</info>');
 
                     if (!$process->isSuccessful()) {
                         throw new \RuntimeException($process->getErrorOutput());
@@ -71,7 +73,7 @@ class BackupCommand extends Command
                 $rotate->setDay(7);
                 $rotate->run();
 
-                $output->writeln('<info>Backup done !</info>');
+                $output->writeln('<info>Backup done for ['.$id.'] !</info>');
             }
         } else {
             $output->writeln('<error>Missing boxyback or apps index in Yaml file</error>');
